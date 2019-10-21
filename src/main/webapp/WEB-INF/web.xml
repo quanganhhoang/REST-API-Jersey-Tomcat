@@ -3,10 +3,10 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <display-name>CS 6650 Skier API</display-name>
 
   <servlet>
-    <servlet-name>skier-servlet</servlet-name>
+    <servlet-name>Jersey-Servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 
     <init-param>
@@ -22,7 +22,7 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>skier-servlet</servlet-name>
+    <servlet-name>Jersey-Servlet</servlet-name>
     <url-pattern>/skier-api/*</url-pattern>
   </servlet-mapping>
 </web-app>

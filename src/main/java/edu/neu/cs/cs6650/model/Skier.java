@@ -1,5 +1,8 @@
 package edu.neu.cs.cs6650.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Skier {
   private long id;
   private String firstName;
@@ -35,5 +38,14 @@ public class Skier {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  @Override
+  public String toString() {
+    return "Skier{" +
+        "id=" + id +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        '}';
   }
 }

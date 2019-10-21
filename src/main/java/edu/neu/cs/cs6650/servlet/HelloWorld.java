@@ -1,4 +1,4 @@
-package edu.neu.cs.cs6650.api;
+package edu.neu.cs.cs6650.servlet;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

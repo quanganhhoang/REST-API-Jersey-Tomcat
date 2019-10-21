@@ -1,8 +1,7 @@
 package edu.neu.cs.cs6650.model;
 
-import java.time.LocalDate;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement // there is no built-in for JSON
