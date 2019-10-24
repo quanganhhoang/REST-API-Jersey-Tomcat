@@ -46,7 +46,7 @@ public class ResortServlet {
           .entity(myEntity)
           .build();
     } catch (SQLException e) {
-      logger.info("ERROR: ");
+      logger.info(e);
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
   }

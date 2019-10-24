@@ -4,55 +4,66 @@ import edu.neu.cs.cs6650.Util.UtilDB;
 import edu.neu.cs.cs6650.model.Resort;
 import edu.neu.cs.cs6650.model.ResortList;
 import edu.neu.cs.cs6650.model.SeasonList;
-import edu.neu.cs.cs6650.sql.SqlConnection;
-import edu.neu.cs.cs6650.sql.SqlResultSet;
-import edu.neu.cs.cs6650.sql.SqlRow;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ResortService {
+public class ResortService extends Service {
   private static final Logger logger = LogManager.getLogger(ResortService.class.getName());
 
-  private static final String SQL_CONN_SERVER = "localhost:3306";
-  private static final String SQL_CONN_DB = "skierapi";
-  private static final String SQL_CONN_USERNAME = "root";
-  private static final String SQL_CONN_PW = "root";
+  public ResortService() {
+    super();
+  }
 
   public ResortList getAllResorts() throws SQLException {
-    String sqlStmt = "SELECT * FROM Resorts";
+    String sqlStmt = "SELECT * FROM Resorts;";
 
     logger.info("Executing: " + sqlStmt);
-    SqlResultSet result;
-    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
-      result = sqlConn.query(sqlStmt);
-    }
 
-    List<Resort> resortList = new ArrayList<>();
-    for (SqlRow row : result) {
-      resortList.add(new Resort(row.getField("id"), row.getField("resort_name")));
-    }
+    try (Connection conn = this.hikariDS.getConnection()) {
+      PreparedStatement pst = conn.prepareStatement(sqlStmt);
+      ResultSet rs = pst.executeQuery();
 
-    return new ResortList(resortList);
+      List<Resort> resortList = new ArrayList<>();
+      while (rs.next()) {
+        resortList.add(new Resort(rs.getString("id"), rs.getString("resort_name")));
+      }
+
+      return new ResortList(resortList);
+    }
+//    SqlResultSet result;
+//    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
+//      result = sqlConn.query(sqlStmt);
+//    }
+
+
   }
 
   public SeasonList getSeasonsByResort(int resortId) throws SQLException {
     String sqlStmt = "SELECT * FROM Seasons WHERE resort_id = " + resortId;
 
     logger.info("Executing: " + sqlStmt);
-    SqlResultSet result;
-    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
-      result = sqlConn.query(sqlStmt);
-    }
+    try (Connection conn = this.hikariDS.getConnection()) {
+      PreparedStatement pst = conn.prepareStatement(sqlStmt);
+      ResultSet rs = pst.executeQuery();
 
-    List<String> seasons = new ArrayList<>();
-    for (SqlRow row : result) {
-      seasons.add(row.getField("season"));
-    }
+      List<String> seasons = new ArrayList<>();
+      while (rs.next()) {
+        seasons.add(rs.getString("season"));
+      }
 
-    return new SeasonList(seasons);
+      return new SeasonList(seasons);
+    }
+//    SqlResultSet result;
+//    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
+//      result = sqlConn.query(sqlStmt);
+//    }
   }
 
   public boolean addNewSeason(int resortId, String season) throws SQLException {
@@ -60,7 +71,7 @@ public class ResortService {
       sqlStmt += season + ", ";
       sqlStmt += resortId + ")";
 
-      System.out.println("Executing: " + sqlStmt);
+    System.out.println("Executing: " + sqlStmt);
     return UtilDB.createDBEntry(sqlStmt);
   }
 }
