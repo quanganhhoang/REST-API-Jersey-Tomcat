@@ -22,12 +22,12 @@ public class SqlDemo {
   private static final String SQL_CONN_PW = "root";
 
   public static void main(String[] args) {
-
+    testConnection();
 //    testGetVertical();
 //    testPostVertical();
 //    testGetTotalVerticalByResort();
 //    testGetTotalVerticalByResortAndSeason();
-    testAddNewSeason();
+//    testAddNewSeason();
   }
 
   public static void testConnection() {
@@ -88,10 +88,10 @@ public class SqlDemo {
   public static void testAddNewSeason() {
     ResortService resortService = new ResortService();
     try {
-      System.out.println(resortService.addNewSeason(1, "2016"));
+      logger.info(resortService.addNewSeason(1, "2016"));
     } catch (SQLException e) {
       e.printStackTrace();
-      System.out.println("ERROR: ");
+      logger.info("ERROR: ");
     }
   }
 }

@@ -3,22 +3,22 @@ package edu.neu.cs.cs6650.controller;
 import edu.neu.cs.cs6650.Util.UtilDB;
 import edu.neu.cs.cs6650.model.SeasonVertical;
 import edu.neu.cs.cs6650.model.SeasonVerticalList;
-import edu.neu.cs.cs6650.sql.SqlConnection;
-import edu.neu.cs.cs6650.sql.SqlResultSet;
-import edu.neu.cs.cs6650.sql.SqlRow;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SkierService {
+public class SkierService extends Service {
   private static final Logger logger = LogManager.getLogger(SkierService.class.getName());
 
-  private static final String SQL_CONN_SERVER = "localhost:3306";
-  private static final String SQL_CONN_DB = "skierapi";
-  private static final String SQL_CONN_USERNAME = "root";
-  private static final String SQL_CONN_PW = "root";
+  public SkierService() {
+    super();
+  }
 
   public int getVertical(int resortId, String season, int dayId, int skierId) throws SQLException {
     String sqlStmt = "SELECT SUM(vertical) FROM LiftRides WHERE ";
@@ -27,12 +27,19 @@ public class SkierService {
       sqlStmt += "day_id = " + dayId + " AND ";
       sqlStmt += "resort_id = " + resortId;
 
-    SqlResultSet result;
-    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
-      result = sqlConn.query(sqlStmt);
-    }
+//    SqlResultSet result;
+//    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
+//      result = sqlConn.query(sqlStmt);
+//    }
+//
+//    return Integer.valueOf(result.getRow(0).getField(0));
 
-    return Integer.valueOf(result.getRow(0).getField(0));
+    try (Connection conn = this.hikariDS.getConnection()) {
+      PreparedStatement pst = conn.prepareStatement(sqlStmt);
+      ResultSet rs = pst.executeQuery();
+
+      return rs.getInt(0);
+    }
   }
 
   public boolean postVertical(int resortId, String season, int dayId,
@@ -46,7 +53,7 @@ public class SkierService {
       sqlStmt += time + ", ";
       sqlStmt += vertical + ");";
 
-    System.out.println("Executing: " + sqlStmt);
+    logger.info("Executing: " + sqlStmt);
     return UtilDB.createDBEntry(sqlStmt);
   }
 
@@ -57,12 +64,18 @@ public class SkierService {
       sqlStmt += "season = '" + season + "'";
 
     System.out.println(("Executing: " + sqlStmt));
-    SqlResultSet result;
-    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
-      result = sqlConn.query(sqlStmt);
-    }
+    try (Connection conn = this.hikariDS.getConnection()) {
+      PreparedStatement pst = conn.prepareStatement(sqlStmt);
+      ResultSet rs = pst.executeQuery();
 
-    return Integer.valueOf(result.getRow(0).getField(0));
+      return rs.getInt(0);
+    }
+//    SqlResultSet result;
+//    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
+//      result = sqlConn.query(sqlStmt);
+//    }
+//
+//    return Integer.valueOf(result.getRow(0).getField(0));
   }
 
   public SeasonVerticalList getTotalVerticalByResort(int skierId, String resortName) throws SQLException {
@@ -72,14 +85,20 @@ public class SkierService {
       sqlStmt += " GROUP BY season;";
 
     System.out.println(("Executing: " + sqlStmt));
-    SqlResultSet result;
-    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
-      result = sqlConn.query(sqlStmt);
+    ResultSet rs = null;
+    try (Connection conn = hikariDS.getConnection()) {
+      PreparedStatement pst = conn.prepareStatement(sqlStmt);
+      rs = pst.executeQuery();
     }
 
+//    SqlResultSet result;
+//    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
+//      result = sqlConn.query(sqlStmt);
+//    }
+
     List<SeasonVertical> seasonStats = new ArrayList<>();
-    for (SqlRow row : result) {
-      seasonStats.add(new SeasonVertical(row.getField("season"), Integer.valueOf(row.getField("total_vertical"))));
+    while (rs.next()) {
+      seasonStats.add(new SeasonVertical(rs.getString("season"), rs.getInt("total_vertical")));
     }
 
     return new SeasonVerticalList(seasonStats);
