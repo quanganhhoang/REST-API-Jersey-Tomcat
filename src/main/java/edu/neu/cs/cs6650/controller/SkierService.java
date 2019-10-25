@@ -4,6 +4,7 @@ import edu.neu.cs.cs6650.Util.UtilDB;
 import edu.neu.cs.cs6650.model.SeasonVertical;
 import edu.neu.cs.cs6650.model.SeasonVerticalList;
 
+import edu.neu.cs.cs6650.sql.HikariDS;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,12 +14,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SkierService extends Service {
+public class SkierService {
   private static final Logger logger = LogManager.getLogger(SkierService.class.getName());
 
-  public SkierService() {
-    super();
-  }
+  public SkierService() {}
 
   public int getVertical(int resortId, String season, int dayId, int skierId) throws SQLException {
     String sqlStmt = "SELECT SUM(vertical) FROM LiftRides WHERE ";
@@ -33,12 +32,13 @@ public class SkierService extends Service {
 //    }
 //
 //    return Integer.valueOf(result.getRow(0).getField(0));
+    logger.info("Executing: " + sqlStmt);
+    try (Connection conn = HikariDS.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sqlStmt);
+         ResultSet rs = pst.executeQuery()) {
 
-    try (Connection conn = this.hikariDS.getConnection()) {
-      PreparedStatement pst = conn.prepareStatement(sqlStmt);
-      ResultSet rs = pst.executeQuery();
-
-      return rs.getInt(0);
+      if (rs.next()) return rs.getInt(1);
+      else throw new SQLException();
     }
   }
 
@@ -64,11 +64,12 @@ public class SkierService extends Service {
       sqlStmt += "season = '" + season + "'";
 
     System.out.println(("Executing: " + sqlStmt));
-    try (Connection conn = this.hikariDS.getConnection()) {
-      PreparedStatement pst = conn.prepareStatement(sqlStmt);
-      ResultSet rs = pst.executeQuery();
+    try (Connection conn = HikariDS.getConnection();
+        PreparedStatement pst = conn.prepareStatement(sqlStmt);
+        ResultSet rs = pst.executeQuery()) {
 
-      return rs.getInt(0);
+      if (rs.next()) return rs.getInt(1);
+      else throw new SQLException();
     }
 //    SqlResultSet result;
 //    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
@@ -85,10 +86,17 @@ public class SkierService extends Service {
       sqlStmt += " GROUP BY season;";
 
     System.out.println(("Executing: " + sqlStmt));
-    ResultSet rs = null;
-    try (Connection conn = hikariDS.getConnection()) {
-      PreparedStatement pst = conn.prepareStatement(sqlStmt);
-      rs = pst.executeQuery();
+
+    try (Connection conn = HikariDS.getConnection();
+        PreparedStatement pst = conn.prepareStatement(sqlStmt);
+        ResultSet rs = pst.executeQuery()) {
+
+      List<SeasonVertical> seasonStats = new ArrayList<>();
+      while (rs.next()) {
+        seasonStats.add(new SeasonVertical(rs.getString("season"), rs.getInt("total_vertical")));
+      }
+
+      return new SeasonVerticalList(seasonStats);
     }
 
 //    SqlResultSet result;
@@ -96,11 +104,5 @@ public class SkierService extends Service {
 //      result = sqlConn.query(sqlStmt);
 //    }
 
-    List<SeasonVertical> seasonStats = new ArrayList<>();
-    while (rs.next()) {
-      seasonStats.add(new SeasonVertical(rs.getString("season"), rs.getInt("total_vertical")));
-    }
-
-    return new SeasonVerticalList(seasonStats);
   }
 }

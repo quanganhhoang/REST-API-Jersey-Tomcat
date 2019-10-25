@@ -20,10 +20,7 @@ import org.json.JSONObject;
 @Path("/skiers")
 public class SkierServlet {
   private static final Logger logger = LogManager.getLogger(SkierServlet.class.getName());
-
   private SkierService skierService = new SkierService();
-//  private Gson gson = new Gson();
-
   private static final String BAD_REQUEST_MSG = "{message: bad_request}";
 
   /** Get total vertical for the given skier for the specified ski day.
@@ -41,7 +38,7 @@ public class SkierServlet {
 
       return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(res).build();
     } catch (SQLException e) {
-      logger.info("ERROR: ");
+      logger.info("ERROR: ", e);
 
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
@@ -63,14 +60,14 @@ public class SkierServlet {
     int liftId = req_body.getInt("liftID");
     int vertical = liftId * 10;
 
-    boolean res = false;
+    boolean res;
     try {
       res = skierService.postVertical(resortId, season, dayId, skierId, time, liftId, vertical);
 
       if (res) return Response.status(Status.CREATED).build();
       else return Response.status(Status.BAD_REQUEST).build();
     } catch (SQLException e) {
-      logger.info("ERROR: ");
+      logger.info("ERROR: ", e);
 
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
@@ -101,7 +98,7 @@ public class SkierServlet {
             .build();
       }
     } catch (SQLException e) {
-      logger.info("ERROR: ");
+      logger.info("ERROR: ", e);
 
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }

@@ -46,7 +46,7 @@ public class ResortServlet {
           .entity(myEntity)
           .build();
     } catch (SQLException e) {
-      logger.info(e);
+      logger.info("ERROR: ", e);
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
   }
@@ -70,7 +70,7 @@ public class ResortServlet {
           .entity(myEntity)
           .build();
     } catch (SQLException e) {
-      logger.error("ERROR: ");
+      logger.info("ERROR: ", e);
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
   }
@@ -93,7 +93,7 @@ public class ResortServlet {
       return success ? Response.status(Status.CREATED).build()
                      : Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     } catch (SQLException e) {
-      logger.error("ERROR: ");
+      logger.info("ERROR: ", e);
       return Response.status(Status.BAD_REQUEST).entity(BAD_REQUEST_MSG).build();
     }
   }

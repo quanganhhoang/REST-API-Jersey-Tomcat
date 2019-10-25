@@ -5,6 +5,7 @@ import edu.neu.cs.cs6650.model.Resort;
 import edu.neu.cs.cs6650.model.ResortList;
 import edu.neu.cs.cs6650.model.SeasonList;
 
+import edu.neu.cs.cs6650.sql.HikariDS;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,21 +15,19 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ResortService extends Service {
+public class ResortService {
   private static final Logger logger = LogManager.getLogger(ResortService.class.getName());
 
-  public ResortService() {
-    super();
-  }
+  public ResortService() {}
 
   public ResortList getAllResorts() throws SQLException {
     String sqlStmt = "SELECT * FROM Resorts;";
 
     logger.info("Executing: " + sqlStmt);
 
-    try (Connection conn = this.hikariDS.getConnection()) {
-      PreparedStatement pst = conn.prepareStatement(sqlStmt);
-      ResultSet rs = pst.executeQuery();
+    try (Connection conn = HikariDS.getConnection();
+        PreparedStatement pst = conn.prepareStatement(sqlStmt);
+        ResultSet rs = pst.executeQuery()) {
 
       List<Resort> resortList = new ArrayList<>();
       while (rs.next()) {
@@ -41,17 +40,15 @@ public class ResortService extends Service {
 //    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
 //      result = sqlConn.query(sqlStmt);
 //    }
-
-
   }
 
   public SeasonList getSeasonsByResort(int resortId) throws SQLException {
     String sqlStmt = "SELECT * FROM Seasons WHERE resort_id = " + resortId;
 
     logger.info("Executing: " + sqlStmt);
-    try (Connection conn = this.hikariDS.getConnection()) {
-      PreparedStatement pst = conn.prepareStatement(sqlStmt);
-      ResultSet rs = pst.executeQuery();
+    try (Connection conn = HikariDS.getConnection();
+        PreparedStatement pst = conn.prepareStatement(sqlStmt);
+        ResultSet rs = pst.executeQuery()) {
 
       List<String> seasons = new ArrayList<>();
       while (rs.next()) {
