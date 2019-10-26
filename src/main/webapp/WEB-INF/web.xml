@@ -3,7 +3,7 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>CS 6650 Skier API</display-name>
+  <display-name>CS 6650 Skier API - Jersey</display-name>
 
   <servlet>
     <servlet-name>Jersey-Servlet</servlet-name>
@@ -23,8 +23,9 @@
 
   <servlet-mapping>
     <servlet-name>Jersey-Servlet</servlet-name>
-    <url-pattern>/skier-api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>
+
 
 

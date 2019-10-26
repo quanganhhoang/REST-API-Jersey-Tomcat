@@ -18,8 +18,6 @@ import org.apache.logging.log4j.Logger;
 public class ResortService {
   private static final Logger logger = LogManager.getLogger(ResortService.class.getName());
 
-  public ResortService() {}
-
   public ResortList getAllResorts() throws SQLException {
     String sqlStmt = "SELECT * FROM Resorts;";
 
@@ -68,7 +66,7 @@ public class ResortService {
       sqlStmt += season + ", ";
       sqlStmt += resortId + ")";
 
-    System.out.println("Executing: " + sqlStmt);
+    logger.info("Executing: " + sqlStmt);
     return UtilDB.createDBEntry(sqlStmt);
   }
 }

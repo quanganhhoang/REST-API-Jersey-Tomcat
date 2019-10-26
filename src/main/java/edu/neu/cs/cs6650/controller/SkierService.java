@@ -17,8 +17,6 @@ import org.apache.logging.log4j.Logger;
 public class SkierService {
   private static final Logger logger = LogManager.getLogger(SkierService.class.getName());
 
-  public SkierService() {}
-
   public int getVertical(int resortId, String season, int dayId, int skierId) throws SQLException {
     String sqlStmt = "SELECT SUM(vertical) FROM LiftRides WHERE ";
       sqlStmt += "skier_id = " + skierId + " AND ";
@@ -63,7 +61,7 @@ public class SkierService {
       sqlStmt += "resort_id = (SELECT id FROM Resorts WHERE resort_name = '" + resortName + "') AND ";
       sqlStmt += "season = '" + season + "'";
 
-    System.out.println(("Executing: " + sqlStmt));
+    logger.info(("Executing: " + sqlStmt));
     try (Connection conn = HikariDS.getConnection();
         PreparedStatement pst = conn.prepareStatement(sqlStmt);
         ResultSet rs = pst.executeQuery()) {
@@ -85,7 +83,7 @@ public class SkierService {
       sqlStmt += "resort_id = (SELECT id FROM Resorts WHERE resort_name = '" + resortName + "')";
       sqlStmt += " GROUP BY season;";
 
-    System.out.println(("Executing: " + sqlStmt));
+    logger.info(("Executing: " + sqlStmt));
 
     try (Connection conn = HikariDS.getConnection();
         PreparedStatement pst = conn.prepareStatement(sqlStmt);
@@ -98,7 +96,6 @@ public class SkierService {
 
       return new SeasonVerticalList(seasonStats);
     }
-
 //    SqlResultSet result;
 //    try (SqlConnection sqlConn = new SqlConnection(SQL_CONN_SERVER, SQL_CONN_DB, SQL_CONN_USERNAME, SQL_CONN_PW)) {
 //      result = sqlConn.query(sqlStmt);

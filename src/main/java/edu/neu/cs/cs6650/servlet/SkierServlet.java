@@ -75,7 +75,6 @@ public class SkierServlet {
 
   @GET
   @Path("/{skierId}/vertical")
-  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response getTotalVerticalByResort(String req, @PathParam("skierId") int skierId) {
 
