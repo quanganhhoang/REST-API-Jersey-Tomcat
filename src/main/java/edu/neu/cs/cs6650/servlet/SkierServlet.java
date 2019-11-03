@@ -3,6 +3,7 @@ package edu.neu.cs.cs6650.servlet;
 import edu.neu.cs.cs6650.controller.SkierService;
 import edu.neu.cs.cs6650.model.SeasonVerticalList;
 import java.sql.SQLException;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -75,6 +76,7 @@ public class SkierServlet {
 
   @GET
   @Path("/{skierId}/vertical")
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response getTotalVerticalByResort(String req, @PathParam("skierId") int skierId) {
 

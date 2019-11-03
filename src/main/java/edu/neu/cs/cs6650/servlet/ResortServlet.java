@@ -1,17 +1,21 @@
 package edu.neu.cs.cs6650.servlet;
 
 import edu.neu.cs.cs6650.controller.ResortService;
-import edu.neu.cs.cs6650.model.Resort;
+
 import edu.neu.cs.cs6650.model.ResortList;
 import edu.neu.cs.cs6650.model.SeasonList;
+import edu.neu.cs.cs6650.model.Stat;
 import java.sql.SQLException;
-import java.util.List;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,10 +28,9 @@ import org.json.JSONObject;
 @Path("/resorts")
 public class ResortServlet {
   private static final Logger logger = LogManager.getLogger(ResortServlet.class.getName());
+  private static final String BAD_REQUEST_MSG = "{message: bad_request}";
 
   private ResortService resortService = new ResortService();
-
-  private static final String BAD_REQUEST_MSG = "{message: bad_request}";
 
   /**
    *
@@ -41,9 +44,12 @@ public class ResortServlet {
       ResortList resorts = resortService.getAllResorts();
 
       GenericEntity<ResortList> myEntity = new GenericEntity<ResortList>(resorts){};
-      return Response.status(Status.OK)
+      CacheControl cc = new CacheControl(); // public by default
+      cc.setMaxAge(10);
+      // start separate thread to log server response stat
+      return Response.ok(myEntity)
           .type(MediaType.APPLICATION_JSON)
-          .entity(myEntity)
+          .cacheControl(cc)
           .build();
     } catch (SQLException e) {
       logger.info("ERROR: ", e);

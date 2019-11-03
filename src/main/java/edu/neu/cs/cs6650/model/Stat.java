@@ -1,31 +1,25 @@
 package edu.neu.cs.cs6650.model;
 
 public class Stat {
-  private String api;
+  private String url;
   private String operation;
-  private double meanLatency;
-  private double maxLatency;
+  private double responseTime;
 
-  public Stat(String api, String operation, double meanLatency, double maxLatency) {
-    this.api = api;
+  public Stat(String url, String operation, double responseTime) {
+    this.url = url;
     this.operation = operation;
-    this.meanLatency = meanLatency;
-    this.maxLatency = maxLatency;
+    this.responseTime = responseTime;
   }
 
-  public String getApi() {
-    return api;
+  public String getUrl() {
+    return url;
   }
 
   public String getOperation() {
     return operation;
   }
 
-  public double getMeanLatency() {
-    return meanLatency;
-  }
-
-  public double getMaxLatency() {
-    return maxLatency;
+  public double getResponseTime() {
+    return responseTime;
   }
 }

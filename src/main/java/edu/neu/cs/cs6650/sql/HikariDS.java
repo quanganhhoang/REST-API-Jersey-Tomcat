@@ -2,11 +2,17 @@ package edu.neu.cs.cs6650.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import edu.neu.cs.cs6650.servlet.SkierServlet;
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HikariDS {
-  private static final boolean IS_LOCAL = false;
+  private static final Logger logger = LogManager.getLogger(HikariDS.class.getName());
+
+  private static final boolean IS_LOCAL = true;
+
   private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
   private static final String SQL_CONN_USERNAME = IS_LOCAL ? "root" : System.getenv("RDS_USERNAME");
   private static final String SQL_CONN_PW = IS_LOCAL ? "root" : System.getenv("RDS_PW");
@@ -16,6 +22,7 @@ public class HikariDS {
                : System.getenv("RDS_JDBC_URL");
 
   private static HikariDataSource dataSource = new HikariDataSource();
+    // HikariCP uses milliseconds for all time values.
     static {
       dataSource.setJdbcUrl(JDBC_URL);
       dataSource.setUsername(SQL_CONN_USERNAME);
@@ -23,7 +30,7 @@ public class HikariDS {
       dataSource.setMaximumPoolSize(10);
       dataSource.setDriverClassName(JDBC_DRIVER);
 //      dataSource.setIdleTimeout(28740000);
-//      dataSource.setMaxLifetime(28740000);
+      dataSource.setMaxLifetime(120 * 1_000); // controls the maximum lifetime of a connection in the pool
 //      dataSource.setLeakDetectionThreshold(60000);
       dataSource.addDataSourceProperty("cachePrepStmts", "true");
       dataSource.addDataSourceProperty("prepStmtCacheSize", "250");
