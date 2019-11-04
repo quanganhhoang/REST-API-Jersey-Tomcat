@@ -1,8 +1,8 @@
 package edu.neu.cs.cs6650.servlet;
 
 import edu.neu.cs.cs6650.controller.StatService;
-import edu.neu.cs.cs6650.model.SeasonList;
 import edu.neu.cs.cs6650.model.StatList;
+
 import java.sql.SQLException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

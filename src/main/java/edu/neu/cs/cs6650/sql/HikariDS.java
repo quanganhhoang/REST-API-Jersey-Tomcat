@@ -2,7 +2,6 @@ package edu.neu.cs.cs6650.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import edu.neu.cs.cs6650.servlet.SkierServlet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
@@ -14,11 +13,12 @@ public class HikariDS {
   private static final boolean IS_LOCAL = false;
 
   private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+  private static final String LOCALHOST_JDBC_URL = "jdbc:mysql://localhost:3306/skierapi?useSSL=false&serverTimezone=UTC";
   private static final String SQL_CONN_USERNAME = IS_LOCAL ? "root" : System.getenv("RDS_USERNAME");
   private static final String SQL_CONN_PW = IS_LOCAL ? "root" : System.getenv("RDS_PW");
 
   private static final String JDBC_URL =
-      IS_LOCAL ? "jdbc:mysql://localhost:3306/skierapi?useSSL=false&serverTimezone=UTC"
+      IS_LOCAL ? LOCALHOST_JDBC_URL
                : System.getenv("RDS_JDBC_URL");
 
   private static HikariDataSource dataSource = new HikariDataSource();

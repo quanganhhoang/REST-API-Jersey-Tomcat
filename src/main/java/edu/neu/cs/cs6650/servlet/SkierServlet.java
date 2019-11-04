@@ -3,7 +3,7 @@ package edu.neu.cs.cs6650.servlet;
 import edu.neu.cs.cs6650.controller.SkierService;
 import edu.neu.cs.cs6650.model.SeasonVerticalList;
 import java.sql.SQLException;
-import javax.print.attribute.standard.Media;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,6 +14,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;

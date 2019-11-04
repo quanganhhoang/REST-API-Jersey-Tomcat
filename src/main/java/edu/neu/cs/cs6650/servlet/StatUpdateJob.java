@@ -4,7 +4,7 @@ import edu.neu.cs.cs6650.redis.RedisPool;
 import edu.neu.cs.cs6650.sql.HikariDS;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -39,15 +39,23 @@ public class StatUpdateJob implements Runnable {
           Map<String, String> stats = cacheConn.hgetAll(key);
 
           String sqlStmt = "INSERT INTO Stats (url, method, count, mean_latency, max_latency) "
-              + "VALUES ('" + url + "', '" + method + "', " + stats.get(COUNT) + ", " + stats.get(MAX_LATENCY) + ", " + stats.get(MEAN_LATENCY) + ") "
+              + "VALUES (?, ?, ?, ?, ?) "
               + "ON DUPLICATE KEY UPDATE "
-              + "count = " + stats.get(COUNT)
-              + ", max_latency = " + stats.get(MAX_LATENCY)
-              + ", mean_latency = " + stats.get(MEAN_LATENCY);
+              + "count = ?"
+              + ", max_latency = ?"
+              + ", mean_latency = ?;";
 
-          logger.info("Executing: " + sqlStmt);
           try (Connection sqlConn = HikariDS.getConnection();
               PreparedStatement pst = sqlConn.prepareStatement(sqlStmt)) {
+            pst.setString(1, url);
+            pst.setString(2, method);
+            pst.setLong(3, Long.valueOf(stats.get(COUNT)));
+            pst.setLong(4, Long.valueOf(stats.get(MAX_LATENCY)));
+            pst.setLong(5, Long.valueOf(stats.get(MEAN_LATENCY)));
+            pst.setLong(6, Long.valueOf(stats.get(COUNT)));
+            pst.setLong(7, Long.valueOf(stats.get(MAX_LATENCY)));
+            pst.setLong(8, Long.valueOf(stats.get(MEAN_LATENCY)));
+
             int rowAffected = pst.executeUpdate();
 
             if (rowAffected == 1) logger.info("Inserted...");

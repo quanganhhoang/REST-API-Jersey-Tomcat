@@ -4,11 +4,9 @@ import edu.neu.cs.cs6650.controller.ResortService;
 
 import edu.neu.cs.cs6650.model.ResortList;
 import edu.neu.cs.cs6650.model.SeasonList;
-import edu.neu.cs.cs6650.model.Stat;
+
 import java.sql.SQLException;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
