@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 public class HikariDS {
   private static final Logger logger = LogManager.getLogger(HikariDS.class.getName());
 
-  private static final boolean IS_LOCAL = true;
+  private static final boolean IS_LOCAL = false;
 
   private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
   private static final String SQL_CONN_USERNAME = IS_LOCAL ? "root" : System.getenv("RDS_USERNAME");
@@ -27,7 +27,7 @@ public class HikariDS {
       dataSource.setJdbcUrl(JDBC_URL);
       dataSource.setUsername(SQL_CONN_USERNAME);
       dataSource.setPassword(SQL_CONN_PW);
-      dataSource.setMaximumPoolSize(10);
+      dataSource.setMaximumPoolSize(30);
       dataSource.setDriverClassName(JDBC_DRIVER);
 //      dataSource.setIdleTimeout(28740000);
       dataSource.setMaxLifetime(120 * 1_000); // controls the maximum lifetime of a connection in the pool

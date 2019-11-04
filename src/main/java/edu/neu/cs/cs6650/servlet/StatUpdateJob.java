@@ -39,7 +39,7 @@ public class StatUpdateJob implements Runnable {
           Map<String, String> stats = cacheConn.hgetAll(key);
 
           String sqlStmt = "INSERT INTO Stats (url, method, count, mean_latency, max_latency) "
-              + "VALUES ('" + url + "', '" + method + "', 0, 0, 0) "
+              + "VALUES ('" + url + "', '" + method + "', " + stats.get(COUNT) + ", " + stats.get(MAX_LATENCY) + ", " + stats.get(MEAN_LATENCY) + ") "
               + "ON DUPLICATE KEY UPDATE "
               + "count = " + stats.get(COUNT)
               + ", max_latency = " + stats.get(MAX_LATENCY)

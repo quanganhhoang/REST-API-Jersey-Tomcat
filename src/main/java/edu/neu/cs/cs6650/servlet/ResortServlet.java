@@ -71,9 +71,8 @@ public class ResortServlet {
     try {
       SeasonList seasons = resortService.getSeasonsByResort(resortId);
       GenericEntity<SeasonList> myEntity = new GenericEntity<SeasonList>(seasons){};
-      return Response.status(Status.OK)
+      return Response.ok(myEntity)
           .type(MediaType.APPLICATION_JSON)
-          .entity(myEntity)
           .build();
     } catch (SQLException e) {
       logger.info("ERROR: ", e);
