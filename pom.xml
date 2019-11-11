@@ -13,6 +13,13 @@
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
+  <!--  https://github.com/GoogleCloudPlatform/appengine-try-java/blob/master/pom.xml-->
+  <parent>
+    <groupId>com.google.cloud.samples</groupId>
+    <artifactId>shared-configuration</artifactId>
+    <version>1.0.1</version>
+  </parent>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -29,18 +36,20 @@
       <artifactId>google-cloud-datastore</artifactId>
       <version>1.99.0</version>
     </dependency>
+
     <!-- https://github.com/GoogleCloudPlatform/appengine-try-java/blob/master/pom.xml -->
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
       <version>1.9.76</version>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.google.cloud.tools/appengine-maven-plugin -->
-    <dependency>
-      <groupId>com.google.cloud.tools</groupId>
-      <artifactId>appengine-maven-plugin</artifactId>
-      <version>2.2.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.google.cloud.tools</groupId>-->
+<!--      <artifactId>appengine-maven-plugin</artifactId>-->
+<!--      <version>2.2.0</version>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>redis.clients</groupId>
@@ -191,6 +200,22 @@
     <finalName>skier-api</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.3</version>
+          <configuration>
+            <archiveClasses>true</archiveClasses>
+            <webResources>
+              <!-- in order to interpolate version from pom into appengine-web.xml -->
+              <resource>
+                <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                <filtering>true</filtering>
+                <targetPath>WEB-INF</targetPath>
+              </resource>
+            </webResources>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>com.google.cloud.tools</groupId>
           <artifactId>appengine-maven-plugin</artifactId>
