@@ -1,8 +1,10 @@
 package edu.neu.cs.cs6650.redis;
 
 import java.time.Duration;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -18,6 +20,7 @@ public class RedisPool {
   private static final JedisPool REDIS_POOL = new JedisPool(poolConfig, HOST);
 
   private static JedisPoolConfig buildPoolConfig() {
+    logger.info("Redis host: " + HOST);
     final JedisPoolConfig poolConfig = new JedisPoolConfig();
     poolConfig.setMaxTotal(128);
     poolConfig.setMaxIdle(128);

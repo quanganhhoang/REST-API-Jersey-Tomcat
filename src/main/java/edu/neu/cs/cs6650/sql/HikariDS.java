@@ -24,6 +24,7 @@ public class HikariDS {
   private static HikariDataSource dataSource = new HikariDataSource();
     // HikariCP uses milliseconds for all time values.
     static {
+      logger.info("JDBC URL: " + JDBC_URL);
       dataSource.setJdbcUrl(JDBC_URL);
       dataSource.setUsername(SQL_CONN_USERNAME);
       dataSource.setPassword(SQL_CONN_PW);
