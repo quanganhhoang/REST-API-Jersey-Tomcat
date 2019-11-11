@@ -27,7 +27,7 @@ public class HikariDS {
       dataSource.setJdbcUrl(JDBC_URL);
       dataSource.setUsername(SQL_CONN_USERNAME);
       dataSource.setPassword(SQL_CONN_PW);
-      dataSource.setMaximumPoolSize(30);
+      dataSource.setMaximumPoolSize(20);
       dataSource.setDriverClassName(JDBC_DRIVER);
 //      dataSource.setIdleTimeout(28740000);
       dataSource.setMaxLifetime(120 * 1_000); // controls the maximum lifetime of a connection in the pool

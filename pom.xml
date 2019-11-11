@@ -24,6 +24,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-datastore</artifactId>
+      <version>1.99.0</version>
+    </dependency>
     <!-- https://github.com/GoogleCloudPlatform/appengine-try-java/blob/master/pom.xml -->
     <dependency>
       <groupId>com.google.appengine</groupId>
