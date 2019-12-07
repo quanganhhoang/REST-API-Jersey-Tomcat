@@ -1,5 +1,6 @@
 package edu.neu.cs.cs6650.redis;
 
+import edu.neu.cs.cs6650.config.Config;
 import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,8 +13,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisPool {
   private static final Logger logger = LogManager.getLogger(RedisPool.class.getName());
 
-  private static boolean IS_LOCAL = false;
-  private static final String HOST = IS_LOCAL ?
+  private static final String HOST = Config.IS_LOCAL ?
       "localhost" : System.getenv("REDIS_ENDPOINT");
 
   private static final JedisPoolConfig poolConfig = buildPoolConfig();

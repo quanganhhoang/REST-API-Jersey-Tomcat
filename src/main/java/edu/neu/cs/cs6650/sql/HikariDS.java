@@ -2,6 +2,7 @@ package edu.neu.cs.cs6650.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import edu.neu.cs.cs6650.config.Config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
@@ -10,17 +11,14 @@ import org.apache.logging.log4j.Logger;
 public class HikariDS {
   private static final Logger logger = LogManager.getLogger(HikariDS.class.getName());
 
-  private static final boolean IS_LOCAL = false;
-
   private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
   private static final String LOCALHOST_JDBC_URL = "jdbc:mysql://localhost:3306/skierapi?useSSL=false&serverTimezone=UTC";
-  private static final String JDBC_USERNAME = IS_LOCAL ? "root" : System.getenv("RDS_USERNAME");
-  private static final String JDBC_PW = IS_LOCAL ? "root" : System.getenv("RDS_PW");
+  private static final String JDBC_USERNAME = Config.IS_LOCAL ? "root" : System.getenv("RDS_USERNAME");
+  private static final String JDBC_PW = Config.IS_LOCAL ? "root" : System.getenv("RDS_PW");
 
   private static final String JDBC_URL =
-      IS_LOCAL ? LOCALHOST_JDBC_URL
+      Config.IS_LOCAL ? LOCALHOST_JDBC_URL
                : System.getenv("RDS_JDBC_URL");
-  private static final String GOOGLE_CLOUD_SQL_INSTANCE = System.getenv("CLOUD_SQL_INSTANCE");
 
   private static HikariDataSource dataSource = new HikariDataSource();
     // HikariCP uses milliseconds for all time values.
@@ -49,11 +47,6 @@ public class HikariDS {
       dataSource.addDataSourceProperty("cacheServerConfiguration", "true");
       dataSource.addDataSourceProperty("elideSetAutoCommits", "true");
       dataSource.addDataSourceProperty("maintainTimeStats", "false");
-
-      // Google App Engine Settings
-      dataSource.addDataSourceProperty("socketFactory", "com.google.cloud.sql.mysql.SocketFactory");
-      dataSource.addDataSourceProperty("cloudSqlInstance", "cs6650-skierapi:us-west2:cs6650-skierapi");
-      dataSource.addDataSourceProperty("useSSL", "false");
     }
 
   public static Connection getConnection() throws SQLException {

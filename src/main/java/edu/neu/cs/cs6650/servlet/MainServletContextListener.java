@@ -7,6 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class MainServletContextListener implements ServletContextListener {
+
   private static final int UPDATE_TIME_INTERVAL = 60; // seconds
   private ScheduledExecutorService scheduler;
 
