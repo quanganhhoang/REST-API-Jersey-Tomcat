@@ -31,7 +31,6 @@ public class LiftUsageInput {
     Producer<String, String> producer = new KafkaProducer<>(props);
     for (int i = 0; i < 100; i++) {
       int liftId = random.nextInt(100);
-      System.out.println(liftId);
       producer.send(new ProducerRecord<String, String>(KafkaConfig.INPUT_TOPIC, Integer.toString(liftId)));
     }
     producer.close();

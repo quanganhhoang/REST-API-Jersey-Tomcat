@@ -1,7 +1,8 @@
 package edu.neu.cs.cs6650.kafka;
 
 public class KafkaConfig {
-  public static String KAFKA_BROKERS = "localhost:9092";
+  public static boolean IS_LOCAL = false;
+  public static String KAFKA_BROKERS = IS_LOCAL ? "localhost:9092" : "ec2-3-234-141-12.compute-1.amazonaws.com:9092";
   public static Integer MESSAGE_COUNT = 1000;
   public static String CLIENT_ID = "skier-servlet";
 

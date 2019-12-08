@@ -86,8 +86,8 @@ What you need to install and how to install them
 
 5. Create a Kafka topic
     ```
-    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic life-usage-input
-    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic life-usage-output
+    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic lift-usage-input
+    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic lift-usage-output
     ```
 
 6. Create a Kafka Producer (**optional**)
@@ -103,7 +103,7 @@ What you need to install and how to install them
     
     * Command line:
       ```
-      bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name \
+      bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic lift-usage-output \
       --from-beginning --formatter kafka.tools.DefaultMessageFormatter --property print.key=true --property print.value=true \
       --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
       ```
@@ -143,7 +143,38 @@ What you need to install and how to install them
 3. Create an ElastiCache Redis server
 
 4. Create another EC2 instance to host zookeeper/ kafka broker
-
+    1. Set up security settings to allow inbound connections on port 9092 from VPC and/or your machine
+    
+    2. Update jdk
+        ``` 
+        sudo yum update -y
+        sudo yum install java-1.8.0
+        sudo yum remove java-1.7.0-openjdk
+        ```
+    
+    3. Download Kafka
+        ```
+        wget https://www-eu.apache.org/dist/kafka/2.3.1/kafka-2.3.1-src.tgz
+        tar -xzf kafka-2.3.1-src.tgz
+        cd kafka-2.3.1-src/
+        ```
+        
+    4. Start Zookeeper
+        ```
+        bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+        ```
+        
+        Test that zookeeper is up and running: `echo "ruok" | nc localhost 2181`
+    
+    5. Set up advertised.listeners config param in **server.properties**
+        `advertised.listeners=PLAINTEXT://<kafka-hostname>:9092`
+        
+    6. Start Kafka server
+        ```
+        bin/kafka-topics.sh –create –bootstrap-server localhost:9092 –replication-factor 1 –partitions 1 –topic lift-usage-input
+        bin/kafka-topics.sh –create –bootstrap-server localhost:9092 –replication-factor 1 –partitions 1 –topic lift-usage-output
+        ```
+        
 ## Built With
 
 * [Maven](https://maven.apache.org/) - Dependency Management
