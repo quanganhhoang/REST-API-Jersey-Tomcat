@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Properties;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
@@ -12,6 +13,8 @@ public class StreamConsumer {
   public static void main(String[] args) {
     Consumer<String, Long> consumer = StreamConsumer.createConsumer();
     int noMessageFound = 0;
+    String mostUsedLiftId = "";
+    long maxUsage = 0;
 
     while (true) {
       ConsumerRecords<String, Long> consumerRecords = consumer.poll(Duration.ofSeconds(5));
@@ -25,12 +28,19 @@ public class StreamConsumer {
         }
       }
 
-      consumerRecords.forEach(record -> {
-        System.out.println("Record key: " + record.key());
-        System.out.println("Record value: " + record.value());
-        System.out.println("Record partition: " + record.partition());
-        System.out.println("Record offset: " + record.offset());
-      });
+      for (ConsumerRecord<String, Long> record : consumerRecords) {
+//        System.out.println("Record key: " + record.key());
+//        System.out.println("Record value: " + record.value());
+//        System.out.println("Record partition: " + record.partition());
+//        System.out.println("Record offset: " + record.offset());
+
+        long liftUsage = record.value();
+        if (liftUsage > maxUsage) {
+          maxUsage = liftUsage;
+          mostUsedLiftId = record.key();
+          System.out.println("Most frequently used lift: " + mostUsedLiftId);
+        }
+      }
 
       consumer.commitAsync();
     }
