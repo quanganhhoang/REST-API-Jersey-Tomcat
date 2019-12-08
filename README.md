@@ -86,8 +86,8 @@ What you need to install and how to install them
 
 5. Create a Kafka topic
     ```
-    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partition 1 --topic life-usage-input
-    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partition 1 --topic life-usage-output
+    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic life-usage-input
+    bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic life-usage-output
     ```
 
 6. Create a Kafka Producer (**optional**)
