@@ -19,7 +19,6 @@ public class StreamConsumer {
     while (true) {
       ConsumerRecords<String, Long> consumerRecords = consumer.poll(Duration.ofSeconds(5));
       if (consumerRecords.count() == 0) {
-        System.out.println("NO MESSAGE FOUND");
         noMessageFound++;
         if (noMessageFound > 100) {
           break;
