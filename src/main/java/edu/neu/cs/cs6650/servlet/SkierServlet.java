@@ -1,6 +1,8 @@
 package edu.neu.cs.cs6650.servlet;
 
 import edu.neu.cs.cs6650.controller.SkierService;
+import edu.neu.cs.cs6650.kafka.KafkaConfig;
+import edu.neu.cs.cs6650.kafka.StreamProducer;
 import edu.neu.cs.cs6650.model.SeasonVerticalList;
 import java.sql.SQLException;
 
@@ -61,6 +63,9 @@ public class SkierServlet {
     int time = req_body.getInt("time");
     int liftId = req_body.getInt("liftID");
     int vertical = liftId * 10;
+
+    // send liftId to Kafka topic for analysis
+    StreamProducer.sendKafkaMessage(KafkaConfig.INPUT_TOPIC, Integer.toString(liftId));
 
     boolean res;
     try {
