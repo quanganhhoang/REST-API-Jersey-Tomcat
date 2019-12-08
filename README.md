@@ -167,6 +167,7 @@ What you need to install and how to install them
         Test that zookeeper is up and running: `echo "ruok" | nc localhost 2181`
     
     5. Set up advertised.listeners config param in **server.properties**
+        
         `advertised.listeners=PLAINTEXT://<kafka-hostname>:9092`
         
     6. Start Kafka server
