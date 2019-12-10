@@ -6,7 +6,7 @@ Related technologies include:
 1. **HikariCP** for connection pooling to local mysql instance &amp; production database hosted on AWS RDS
 2. **Log4j2** for logging
 3. **Redis** for caching requests and implementing `/statistics` API
-4. **Kafka Streaming** for data analysis.
+4. **Kafka Streaming** for data analysis. Specifically, this application streams liftId to a Kafka topic which is consumed every few seconds to determine the most frequently used lift by far.
 
 
 ## Getting Started
